@@ -1,0 +1,160 @@
+%% Side-by-side CDN publish pipelines
+%% LEFT:  Cimulate Widget (existing) — Commerce Client UI for Shopper Agent main chat window.
+%%        Repo cimulate-ai/cimulate; literal bucket/CDN/npm path is `copilot-widget` (historical Cimulate name — kept as-is).
+%% RIGHT: Inline Agent Widget (planned, Path B) — PDP opener-pill mini chat, repo SalesforceCommerceCloud/inline-agent-widget
+%% Same bucket (gs://copilot-bundles), same CDN (cdn.search.cimulate.ai), different trust boundaries and IAM roles.
+
+flowchart TB
+
+  %% ============================================================
+  %% LEFT COLUMN — Cimulate Widget (existing)
+  %% ============================================================
+  subgraph LEFT["<b>Cimulate Widget</b> (existing)<br/>cimulate-ai/cimulate · javascript/copilot-widget/"]
+    direction TB
+
+    subgraph L_DEV["Developer loop"]
+      direction TB
+      L1["PR with change under<br/>javascript/copilot-widget/**"]
+      L2["Review + merge to <code>master</code>"]
+      L1 --> L2
+    end
+
+    subgraph L_GHA["GitHub Action: build-and-publish-js.yaml"]
+      direction TB
+      L3["Trigger: push to master<br/>paths: javascript/**"]
+      L4["Matrix guard:<br/>get-changes == ['copilot-widget']"]
+      L5["Runner: cimulate-build<br/>(Cimulate self-hosted ARC)"]
+      L6["actions/checkout@v3"]
+      L7["google-github-actions/auth@v2.1.2<br/>vars.GCP_WORKLOAD_IDENTITY_PROVIDER<br/>vars.GCP_SERVICE_ACCOUNT"]
+      L8["setup-gcloud@v1<br/>project: vars.GCP_PROJECT_ID"]
+      L9["setup-node@v4 (22.16)<br/>npm install → npm test → npm run build"]
+      L10["npm publish --access public"]
+      L11["<b>gsutil cp</b> ./dist/*.umd.js<br/>./dist/*.css<br/>gs://copilot-bundles/copilot-widget/${version}/"]
+      L12["Slack notify × 2 channels<br/>(changelog + CDN URL)"]
+      L3 --> L4 --> L5 --> L6 --> L7 --> L8 --> L9 --> L10 --> L11 --> L12
+    end
+
+    subgraph L_WIF["WIF (Workload Identity Federation)"]
+      direction TB
+      L13["Pool: <b>github-arc</b><br/>Project: cimulate-build"]
+      L14["Provider: github-arc<br/>Issuer: token.actions.githubusercontent.com"]
+      L15["CEL attribute_condition:<br/><b>assertion.repository_owner == 'cimulate-ai'</b><br/>(trusts whole GitHub org)"]
+      L13 --> L14 --> L15
+    end
+
+    subgraph L_SA["Service Account"]
+      direction TB
+      L16["SA: vars.GCP_SERVICE_ACCOUNT<br/>(Cimulate CI identity)"]
+      L17["Project roles on cimulate-build:<br/>artifactregistry.admin<br/>iam.serviceAccountTokenCreator<br/>storage.admin"]
+      L18["Bucket roles on copilot-bundles:<br/><b>storage.objectAdmin</b> (whole bucket)<br/>storage.bucketViewer"]
+      L19["Can: list, read, create,<br/><b>overwrite, delete</b> ANY object"]
+      L16 --> L17 --> L18 --> L19
+    end
+
+    subgraph L_OUT["Delivered"]
+      direction TB
+      L20["gs://copilot-bundles/<br/>copilot-widget/${version}/messaging.umd.js"]
+      L21["https://cdn.search.cimulate.ai/<br/>copilot-widget/${version}/messaging.umd.js"]
+      L22["npm: @cimulate/copilot-widget@${version}"]
+      L20 --> L21
+      L20 -.-> L22
+    end
+
+    L2 --> L3
+    L7 -. "OIDC token<br/>→ STS checks CEL<br/>→ short-lived access token" .-> L13
+    L15 -. "mints token for" .-> L16
+    L11 -. "preflight list+get OK<br/>(SA has objectAdmin)" .-> L18
+    L11 --> L20
+  end
+
+  %% ============================================================
+  %% RIGHT COLUMN — Inline Agent Widget (planned, Path B)
+  %% ============================================================
+  subgraph RIGHT["<b>Inline Agent Widget</b> (Path B, planned)<br/>SalesforceCommerceCloud/inline-agent-widget"]
+    direction TB
+
+    subgraph R_DEV["Developer loop"]
+      direction TB
+      R1["PR with change under <code>src/**</code>"]
+      R2["<b>Bump package.json version</b><br/>(required: duplicate version → 412)"]
+      R3["Review + merge to <code>main</code>"]
+      R1 --> R2 --> R3
+    end
+
+    subgraph R_GHA["GitHub Action: publish-cdn.yml"]
+      direction TB
+      R4["Trigger: push to main<br/>paths: src/**"]
+      R5["Runner: <b>ubuntu-latest</b><br/>(Cimulate runners refuse out-of-org jobs)"]
+      R6["actions/checkout@v4"]
+      R7["google-github-actions/auth@v2<br/>vars.GCP_WORKLOAD_IDENTITY_PROVIDER<br/>vars.GCP_SERVICE_ACCOUNT"]
+      R8["setup-gcloud@v2"]
+      R9["setup-node@v4 (22)<br/>npm ci → npm test → npm run build"]
+      R10["version=$(npm pkg get version)"]
+      R11["<b>curl -X PUT</b> to<br/>storage.googleapis.com/copilot-bundles/<br/>inline-agent-widget/${version}/inline-agent-widget.umd.js<br/>Headers:<br/>• x-goog-if-generation-match: 0<br/>• Cache-Control: public, max-age=3600<br/>• Content-Type: text/javascript"]
+      R12["(future) Slack notify"]
+      R4 --> R5 --> R6 --> R7 --> R8 --> R9 --> R10 --> R11 --> R12
+    end
+
+    subgraph R_WIF["WIF (Workload Identity Federation)"]
+      direction TB
+      R13["Pool: <b>inline-agent-widget</b> (NEW)<br/>Project: cimulate-search-api"]
+      R14["Provider: github<br/>Issuer: token.actions.githubusercontent.com"]
+      R15["CEL attribute_condition:<br/><b>repo == 'SalesforceCommerceCloud/inline-agent-widget'<br/>AND workflow_ref startsWith<br/>'.github/workflows/publish-cdn.yml@refs/heads/main'</b><br/>(trusts ONE repo + ONE workflow file + ONE ref)"]
+      R13 --> R14 --> R15
+    end
+
+    subgraph R_SA["Service Account"]
+      direction TB
+      R16["SA (NEW):<br/>inline-agent-widget-cdn@<br/>cimulate-search-api.iam.gserviceaccount.com"]
+      R17["Project roles: <b>none</b>"]
+      R18["Bucket roles on copilot-bundles:<br/><b>storage.objectCreator</b> ONLY<br/>Condition: resource.name.startsWith(<br/>'projects/_/buckets/copilot-bundles/<br/>objects/inline-agent-widget/')"]
+      R19["Can: <b>create only</b><br/>Cannot: list, read, overwrite, delete<br/>(not even its own objects)"]
+      R16 --> R17 --> R18 --> R19
+    end
+
+    subgraph R_OUT["Delivered"]
+      direction TB
+      R20["gs://copilot-bundles/<br/>inline-agent-widget/${version}/inline-agent-widget.umd.js"]
+      R21["https://cdn.search.cimulate.ai/<br/>inline-agent-widget/${version}/inline-agent-widget.umd.js"]
+      R22["<b>No npm publish</b><br/>Consumers load via &lt;script src&gt;"]
+      R20 --> R21
+      R20 -.-> R22
+    end
+
+    R3 --> R4
+    R7 -. "OIDC token<br/>→ STS checks narrow CEL<br/>→ short-lived access token" .-> R13
+    R15 -. "mints token for" .-> R16
+    R11 -. "gsutil/gcloud would 403<br/>(preflight needs list+get<br/>which SA lacks)" .-> R18
+    R11 --> R20
+  end
+
+  %% ============================================================
+  %% Shared infra (both pipelines write here)
+  %% ============================================================
+  subgraph SHARED["Shared infra"]
+    direction TB
+    S1["Bucket: gs://copilot-bundles<br/>Project: cimulate-search-api · Location: US"]
+    S2["CDN: cdn.search.cimulate.ai<br/>(anonymous GET, 1h cache)"]
+    S1 --> S2
+  end
+
+  L18 -.-> S1
+  R18 -.-> S1
+  L20 -.-> S1
+  R20 -.-> S1
+
+  %% ============================================================
+  %% Styling
+  %% ============================================================
+  classDef trusted fill:#d4edda,stroke:#28a745,stroke-width:2px,color:#000
+  classDef restricted fill:#fff3cd,stroke:#ffc107,stroke-width:2px,color:#000
+  classDef danger fill:#f8d7da,stroke:#dc3545,stroke-width:1px,color:#000
+  classDef safe fill:#d1ecf1,stroke:#17a2b8,stroke-width:1px,color:#000
+
+  class L18,L19 danger
+  class R18,R19 trusted
+  class L15 restricted
+  class R15 trusted
+  class L11 danger
+  class R11 safe
+  class R2 restricted

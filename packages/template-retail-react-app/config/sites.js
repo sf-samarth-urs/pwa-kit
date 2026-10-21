@@ -8,7 +8,7 @@
 // You can also provide alias for your locale. They will be used in place of your locale id when generating paths across the app
 module.exports = [
     {
-        id: 'RefArch',
+        id: 'NTOManaged',
         l10n: {
             supportedCurrencies: ['USD'],
             defaultCurrency: 'USD',
@@ -17,86 +17,8 @@ module.exports = [
                 {
                     id: 'en-US',
                     preferredCurrency: 'USD'
-                },
-                {
-                    id: 'en-CA',
-                    preferredCurrency: 'USD'
                 }
             ]
-        }
-    },
-    {
-        id: 'RefArchGlobal',
-        l10n: {
-            supportedCurrencies: ['GBP', 'EUR', 'CNY', 'JPY'],
-            defaultCurrency: 'GBP',
-            supportedLocales: [
-                {
-                    id: 'da-DK',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'de-DE',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'en-GB',
-                    preferredCurrency: 'GBP'
-                },
-                {
-                    id: 'es-MX',
-                    preferredCurrency: 'MXN'
-                },
-                {
-                    id: 'fi-FI',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'fr-FR',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'it-IT',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'ja-JP',
-                    preferredCurrency: 'JPY'
-                },
-                {
-                    id: 'ko-KR',
-                    preferredCurrency: 'KRW'
-                },
-                {
-                    id: 'nl-NL',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'no-NO',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'pl-PL',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'pt-BR',
-                    preferredCurrency: 'BRL'
-                },
-                {
-                    id: 'sv-SE',
-                    preferredCurrency: 'EUR'
-                },
-                {
-                    id: 'zh-CN',
-                    preferredCurrency: 'CNY'
-                },
-                {
-                    id: 'zh-TW',
-                    preferredCurrency: 'TWD'
-                }
-            ],
-            defaultLocale: 'en-GB'
         }
     }
 ]

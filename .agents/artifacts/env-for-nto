@@ -1,0 +1,41 @@
+# ============================================================================
+# Local environment variables for `npm run start`
+# Auto-loaded by the start script (set -a; . ./.env). Git-ignored, not committed.
+# ============================================================================
+
+# SLAS private client secret for NTO - f_ecom_tbdp_prd
+PWA_KIT_SLAS_CLIENT_SECRET='sCwW1CrAxubqvVtU3ZxTb9fPXu6AqoxYQ6vp_K_jtQ8'
+
+# ============================================================================
+# Commerce Agent settings (floating widget)
+# ============================================================================
+COMMERCE_AGENT_SETTINGS='{
+  "enabled": "true",
+  "provider": "commerce-client",
+  "cc_cdnVersion": "1.22.0",
+  "scrt2Url": "https://q3sdb60111062025mp1.test1.my.pc-rnd.salesforce-scrt.com",
+  "salesforceOrgId": "00Dfi800001CByP",
+  "cc_esDeveloperName": "BYONCommerceClientAPI",
+  "cc_capabilitiesVersion": "65",
+  "cc_headerText": "Commerce Client",
+  "cc_disclaimerMarkdown": "This is AI and can make mistakes.",
+  "enableAgentFromHeader": "true",
+  "cc_logoUrl": "https://cimulate.ai/wp-content/uploads/2025/07/Parrot-Corner-1.png",
+  "cc_widgetPosition": "bottom-right",
+  "cc_pagePush": "true",
+  "cc_isOpen": "false",
+  "cc_isDevelopment": "true"
+}'
+
+# ============================================================================
+# Inline PDP Agent Widget settings
+# ============================================================================
+EMBEDDED_AGENT_COMMERCE_SETTINGS='{
+  "enabled": true,
+  "scrt2Url": "https://q3sdb60111062025mp1.test1.my.pc-rnd.salesforce-scrt.com",
+  "orgId": "00Dfi800001CByP",
+  "esDeveloperName": "BYONCommerceClientAPI",
+  "placeholder": "",
+  "persistSession": true,
+  "enableLogging": false
+}'

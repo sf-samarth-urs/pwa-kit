@@ -11,11 +11,24 @@ import PropTypes from 'prop-types'
 import useInlineAgentWidget, {
     isConfigured
 } from '@salesforce/retail-react-app/app/hooks/use-inline-agent-widget'
+import InlineAgentRedirectShim from '@salesforce/retail-react-app/app/components/inline-agent-widget/InlineAgentRedirectShim'
 
-const InlineAgentWidget = ({config, pdpQuestions, productName}) => {
+const InlineAgentWidget = ({config, pdpQuestions, productName, productId}) => {
     const containerRef = useInlineAgentWidget(config, {pdpQuestions, productName})
 
     if (!isConfigured(config)) return null
+
+    // Agent-redirect mode: no local SCRT2 session. The shim hands the question
+    // (pill or typed) off to the main Shopper Agent drawer.
+    if (config.mode === 'agent-redirect') {
+        return (
+            <InlineAgentRedirectShim
+                pdpQuestions={pdpQuestions}
+                productName={productName}
+                productId={productId}
+            />
+        )
+    }
 
     return (
         <>
@@ -33,7 +46,13 @@ InlineAgentWidget.propTypes = {
         scrt2Url: PropTypes.string,
         orgId: PropTypes.string,
         esDeveloperName: PropTypes.string,
-        placeholder: PropTypes.string
+        placeholder: PropTypes.string,
+        /**
+         * `'inline'` (default) runs the UMD custom element with its own SCRT2 session.
+         * `'agent-redirect'` renders a non-conversational shim that hands shopper
+         * questions off to the main Shopper Agent drawer.
+         */
+        mode: PropTypes.oneOf(['inline', 'agent-redirect'])
     }),
     /**
      * Opener questions for the current product — rendered as tappable pills
@@ -48,7 +67,13 @@ InlineAgentWidget.propTypes = {
      * `name` standard field. When absent, the widget falls back to the
      * generic "Ask me anything" string.
      */
-    productName: PropTypes.string
+    productName: PropTypes.string,
+    /**
+     * Current product id. Forwarded as `productContext.productId` when a
+     * handoff fires in agent-redirect mode so the main drawer can attach it
+     * to the Agentforce routing attributes.
+     */
+    productId: PropTypes.string
 }
 
 export default InlineAgentWidget

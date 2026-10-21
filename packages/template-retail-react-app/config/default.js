@@ -170,30 +170,31 @@ module.exports = {
                 callbackURI: '/registration-verification-callback'
             }
         },
-        defaultSite: 'RefArchGlobal',
+        defaultSite: 'NTOManaged',
         siteAliases: {
-            RefArch: 'us',
-            RefArchGlobal: 'global'
+            NTOManaged: 'us'
         },
         sites,
         commerceAPI: {
             proxyPath: `/mobify/proxy/api`,
             parameters: {
-                clientId: 'c9c45bfd-0ed3-4aa2-9971-40f88962b836',
+                clientId: 'af919544-30a2-4c65-9564-2db56fc80fc3',
                 notifyClientId: 'cdaa0bde-f866-4bf9-941a-e0fe5076db42',
-                organizationId: 'f_ecom_zzrf_001',
-                shortCode: 'kv7kzm78',
-                siteId: 'RefArchGlobal'
+                organizationId: 'f_ecom_tbdp_prd',
+                shortCode: 'sandbox-001',
+                siteId: 'NTOManaged'
             }
             // Optional: Set the domain for auth cookies to share them across subdomains.
             // If not set, cookies default to the current host.
             // cookieDomain: '.example.com'
         },
         einsteinAPI: {
+            // Einstein recommendations not provisioned for tbdp_prd / NTOManaged.
+            // Leave einsteinId empty so the useRecommendations hooks short-circuit
+            // and no cross-tenant calls go to the RefArch Einstein ID.
             host: 'https://api.cquotient.com',
-            einsteinId: '1ea06c6e-c936-4324-bcf0-fada93f83bb1',
-            // This differs from the siteId in commerceAPIConfig for testing purposes
-            siteId: 'aaij-MobileFirst',
+            einsteinId: '',
+            siteId: 'NTOManaged',
             isProduction: false
         },
         dataCloudAPI: {
@@ -250,7 +251,11 @@ module.exports = {
             esDeveloperName: '',
             placeholder: '',
             persistSession: true,
-            enableLogging: false
+            enableLogging: false,
+            // 'inline' (default) renders the UMD custom element with its own SCRT2 session.
+            // 'agent-redirect' renders a non-conversational shim on the PDP that hands shopper
+            // questions off to the main Shopper Agent drawer via shopper-agent-handoff.
+            mode: 'inline'
         },
         googleCloudAPI: {
             apiKey: process.env.GOOGLE_CLOUD_API_KEY
@@ -274,11 +279,11 @@ module.exports = {
         enableHttpOnlySessionCookies: false,
         proxyConfigs: [
             {
-                host: 'kv7kzm78.api.commercecloud.salesforce.com',
+                host: 'sandbox-001.api.commercecloud.salesforce.com',
                 path: 'api'
             },
             {
-                host: 'zzrf-001.dx.commercecloud.salesforce.com',
+                host: 'sandbox-001.dx.commercecloud.salesforce.com',
                 path: 'ocapi'
             }
         ]

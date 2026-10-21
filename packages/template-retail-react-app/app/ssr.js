@@ -183,7 +183,8 @@ const options = {
     // Set this to false if using a SLAS public client
     // When setting this to true, make sure to also set the PWA_KIT_SLAS_CLIENT_SECRET
     // environment variable as this endpoint will return HTTP 501 if it is not set
-    useSLASPrivateClient: false,
+    // tbdp_prd / NTOManaged uses a PRIVATE SLAS client → true.
+    useSLASPrivateClient: true,
 
     // To extend the SLAS private-client proxy allow-list, supply
     // `slasPrivateClientAllowList`. See the built-in list in pwa-kit-runtime
@@ -227,7 +228,9 @@ const options = {
         enabled: false,
 
         // The origin of the SFCC instance (i.e. the instance that is being proxied to which hosts the storefront).
-        sfccOrigin: 'https://zzrf-001.dx.commercecloud.salesforce.com',
+        // Dormant: hybridProxy is disabled above. Pointed at tbdp_prd for correctness
+        // if ever enabled; the active storefront runs through SCAPI proxyConfigs.
+        sfccOrigin: 'https://sandbox-001.dx.commercecloud.salesforce.com',
 
         // The MRT rules to apply to the hybrid proxy.
         // These rules determine which requests are handled by PWA Kit (MRT) vs proxied to SFCC. The same rules should be used in the eCDN rules for the same requests.
@@ -570,6 +573,7 @@ const {handler} = runtime.createHandler(options, (app) => {
                         // Default source for product images - replace with your CDN
                         '*.commercecloud.salesforce.com',
                         '*.demandware.net',
+                        's3.amazonaws.com',
                         '*.adyen.com',
                         'pay.google.com', // Google Pay payment handler icon
                         'www.gstatic.com', // optional, if icon is on gstatic

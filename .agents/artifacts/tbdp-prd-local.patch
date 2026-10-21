@@ -1,0 +1,198 @@
+diff --git a/packages/template-retail-react-app/app/components/_app-config/index.jsx b/packages/template-retail-react-app/app/components/_app-config/index.jsx
+index 4c1588cd..4eb4ae81 100644
+--- a/packages/template-retail-react-app/app/components/_app-config/index.jsx
++++ b/packages/template-retail-react-app/app/components/_app-config/index.jsx
+@@ -118,7 +118,8 @@ const AppConfig = ({children, locals = {}}) => {
+             defaultDnt={DEFAULT_DNT_STATE}
+             // Set 'enablePWAKitPrivateClient' to true to use SLAS private client login flows.
+             // Make sure to also enable useSLASPrivateClient in ssr.js when enabling this setting.
+-            enablePWAKitPrivateClient={false}
++            // tbdp_prd / NTOManaged uses a PRIVATE SLAS client → route through /mobify/slas/private.
++            enablePWAKitPrivateClient={true}
+             privateClientProxyEndpoint={slasPrivateClientProxyEndpoint}
+             publicClientProxyEndpoint={slasPublicClientProxyEndpoint}
+             // Uncomment 'hybridAuthEnabled' if the current site has Hybrid Auth enabled. Do NOT set this flag for hybrid storefronts using Plugin SLAS.
+diff --git a/packages/template-retail-react-app/app/ssr.js b/packages/template-retail-react-app/app/ssr.js
+index 78ab6448..d05ba411 100644
+--- a/packages/template-retail-react-app/app/ssr.js
++++ b/packages/template-retail-react-app/app/ssr.js
+@@ -185,7 +185,8 @@ const options = {
+     // Set this to false if using a SLAS public client
+     // When setting this to true, make sure to also set the PWA_KIT_SLAS_CLIENT_SECRET
+     // environment variable as this endpoint will return HTTP 501 if it is not set
+-    useSLASPrivateClient: false,
++    // tbdp_prd / NTOManaged uses a PRIVATE SLAS client → true.
++    useSLASPrivateClient: true,
+ 
+     // To extend the SLAS private-client proxy allow-list, supply
+     // `slasPrivateClientAllowList`. See the built-in list in pwa-kit-runtime
+@@ -229,7 +230,9 @@ const options = {
+         enabled: false,
+ 
+         // The origin of the SFCC instance (i.e. the instance that is being proxied to which hosts the storefront).
+-        sfccOrigin: 'https://zzrf-001.dx.commercecloud.salesforce.com',
++        // Dormant: hybridProxy is disabled above. Pointed at tbdp_prd for correctness
++        // if ever enabled; the active storefront runs through SCAPI proxyConfigs.
++        sfccOrigin: 'https://sandbox-001.dx.commercecloud.salesforce.com',
+ 
+         // The MRT rules to apply to the hybrid proxy.
+         // These rules determine which requests are handled by PWA Kit (MRT) vs proxied to SFCC. The same rules should be used in the eCDN rules for the same requests.
+diff --git a/packages/template-retail-react-app/config/default.js b/packages/template-retail-react-app/config/default.js
+index a7c13b13..373b81f3 100644
+--- a/packages/template-retail-react-app/config/default.js
++++ b/packages/template-retail-react-app/config/default.js
+@@ -163,29 +163,30 @@ module.exports = {
+                 landingPath: '/reset-password-landing'
+             }
+         },
+-        defaultSite: 'RefArchGlobal',
++        defaultSite: 'NTOManaged',
+         siteAliases: {
+-            RefArch: 'us',
+-            RefArchGlobal: 'global'
++            NTOManaged: 'us'
+         },
+         sites,
+         commerceAPI: {
+             proxyPath: `/mobify/proxy/api`,
+             parameters: {
+-                clientId: 'c9c45bfd-0ed3-4aa2-9971-40f88962b836',
+-                organizationId: 'f_ecom_zzrf_001',
+-                shortCode: 'kv7kzm78',
+-                siteId: 'RefArchGlobal'
++                clientId: 'af919544-30a2-4c65-9564-2db56fc80fc3',
++                organizationId: 'f_ecom_tbdp_prd',
++                shortCode: 'sandbox-001',
++                siteId: 'NTOManaged'
+             }
+             // Optional: Set the domain for auth cookies to share them across subdomains.
+             // If not set, cookies default to the current host.
+             // cookieDomain: '.example.com'
+         },
+         einsteinAPI: {
++            // Einstein recommendations not provisioned for tbdp_prd / NTOManaged.
++            // Leave einsteinId empty so the useRecommendations hooks short-circuit
++            // and no cross-tenant calls go to the RefArch Einstein ID.
+             host: 'https://api.cquotient.com',
+-            einsteinId: '1ea06c6e-c936-4324-bcf0-fada93f83bb1',
+-            // This differs from the siteId in commerceAPIConfig for testing purposes
+-            siteId: 'aaij-MobileFirst',
++            einsteinId: '',
++            siteId: 'NTOManaged',
+             isProduction: false
+         },
+         dataCloudAPI: {
+@@ -266,11 +267,11 @@ module.exports = {
+         enableHttpOnlySessionCookies: false,
+         proxyConfigs: [
+             {
+-                host: 'kv7kzm78.api.commercecloud.salesforce.com',
++                host: 'sandbox-001.api.commercecloud.salesforce.com',
+                 path: 'api'
+             },
+             {
+-                host: 'zzrf-001.dx.commercecloud.salesforce.com',
++                host: 'sandbox-001.dx.commercecloud.salesforce.com',
+                 path: 'ocapi'
+             }
+         ]
+diff --git a/packages/template-retail-react-app/config/sites.js b/packages/template-retail-react-app/config/sites.js
+index 95365f9e..ce48a0fa 100644
+--- a/packages/template-retail-react-app/config/sites.js
++++ b/packages/template-retail-react-app/config/sites.js
+@@ -8,7 +8,7 @@
+ // You can also provide alias for your locale. They will be used in place of your locale id when generating paths across the app
+ module.exports = [
+     {
+-        id: 'RefArch',
++        id: 'NTOManaged',
+         l10n: {
+             supportedCurrencies: ['USD'],
+             defaultCurrency: 'USD',
+@@ -17,86 +17,8 @@ module.exports = [
+                 {
+                     id: 'en-US',
+                     preferredCurrency: 'USD'
+-                },
+-                {
+-                    id: 'en-CA',
+-                    preferredCurrency: 'USD'
+                 }
+             ]
+         }
+-    },
+-    {
+-        id: 'RefArchGlobal',
+-        l10n: {
+-            supportedCurrencies: ['GBP', 'EUR', 'CNY', 'JPY'],
+-            defaultCurrency: 'GBP',
+-            supportedLocales: [
+-                {
+-                    id: 'da-DK',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'de-DE',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'en-GB',
+-                    preferredCurrency: 'GBP'
+-                },
+-                {
+-                    id: 'es-MX',
+-                    preferredCurrency: 'MXN'
+-                },
+-                {
+-                    id: 'fi-FI',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'fr-FR',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'it-IT',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'ja-JP',
+-                    preferredCurrency: 'JPY'
+-                },
+-                {
+-                    id: 'ko-KR',
+-                    preferredCurrency: 'KRW'
+-                },
+-                {
+-                    id: 'nl-NL',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'no-NO',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'pl-PL',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'pt-BR',
+-                    preferredCurrency: 'BRL'
+-                },
+-                {
+-                    id: 'sv-SE',
+-                    preferredCurrency: 'EUR'
+-                },
+-                {
+-                    id: 'zh-CN',
+-                    preferredCurrency: 'CNY'
+-                },
+-                {
+-                    id: 'zh-TW',
+-                    preferredCurrency: 'TWD'
+-                }
+-            ],
+-            defaultLocale: 'en-GB'
+-        }
+     }
+ ]

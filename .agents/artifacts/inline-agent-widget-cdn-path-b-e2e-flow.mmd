@@ -1,0 +1,34 @@
+%% Path B: inline-agent-widget CDN publish
+%% Mirrors cimulate/.github/workflows/build-and-publish-js.yaml:
+%% no git tag -- merge to main is the trigger; version comes from package.json.
+flowchart TB
+  subgraph land [You: land the change]
+    A[Push branch and open PR]
+    B[CI on the PR: npm test]
+    V["Bump package.json version<br/>(required for any src/ change)"]
+    C[Review and merge to main]
+    D[main has the widget source]
+    A --> B --> V --> C --> D
+  end
+
+  D -.->|"no src/ change -> no publish"| X[CDN unchanged]
+
+  subgraph gha [GitHub Action: publish-cdn.yml]
+    G["Trigger: push to main<br/>paths: src/**"]
+    H[Checkout main]
+    I[WIF: GitHub OIDC to Cimulate SA]
+    J["npm ci, npm test, npm run build"]
+    P["version=$(npm pkg get version)"]
+    K["GCS upload (HTTP PUT) via create-only SA<br/>-> gs://copilot-bundles/inline-agent-widget/${version}/<br/>duplicate-version guard: IfGenerationMatch=0 -> 412"]
+    G --> H --> I --> J --> P --> K
+  end
+
+  D -->|"src/** changed"| G
+
+  subgraph out [Deliverable]
+    L["gs://copilot-bundles/inline-agent-widget/1.2.3/inline-agent-widget.umd.js"]
+    M["https://cdn.search.cimulate.ai/inline-agent-widget/1.2.3/inline-agent-widget.umd.js"]
+    L --> M
+  end
+
+  K --> L
