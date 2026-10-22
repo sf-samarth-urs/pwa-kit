@@ -29,15 +29,17 @@ afterEach(() => {
     window.embeddedservice_bootstrap = originalBootstrap
 })
 
-const installCommerceClient = (sessionOverrides = {}) => {
+const installCommerceClient = (sessionOverrides = {}, pageContextOverrides) => {
     const toggleWidgetOpen = jest.fn()
+    const pageContextSet = jest.fn()
     window.CimulateMessaging = {
         eventHandlers: {
             components: {toggleWidgetOpen},
-            session: sessionOverrides
+            session: sessionOverrides,
+            pageContext: pageContextOverrides || {set: pageContextSet}
         }
     }
-    return {toggleWidgetOpen}
+    return {toggleWidgetOpen, pageContextSet}
 }
 
 const installMiaw = () => {
@@ -156,6 +158,29 @@ describe('handoffToShopperAgent', () => {
         installCommerceClient({sendMessage})
         handoffToShopperAgent({question: '  padded?  '})
         expect(sendMessage).toHaveBeenCalledWith('padded?')
+    })
+
+    it('primes Cimulate pageContext with productId before sending', () => {
+        const sendMessage = jest.fn()
+        const {pageContextSet} = installCommerceClient({sendMessage})
+
+        handoffToShopperAgent({
+            question: 'size question',
+            productContext: {productId: '500400', productName: 'TrailFit Alta'}
+        })
+
+        expect(pageContextSet).toHaveBeenCalledWith({type: 'pdp', id: '500400'})
+        const setOrder = pageContextSet.mock.invocationCallOrder[0]
+        const sendOrder = sendMessage.mock.invocationCallOrder[0]
+        expect(setOrder).toBeLessThan(sendOrder)
+    })
+
+    it('skips pageContext.set when productId is missing', () => {
+        const sendMessage = jest.fn()
+        const {pageContextSet} = installCommerceClient({sendMessage})
+        handoffToShopperAgent({question: 'no product id'})
+        expect(pageContextSet).not.toHaveBeenCalled()
+        expect(sendMessage).toHaveBeenCalledWith('no product id')
     })
 })
 

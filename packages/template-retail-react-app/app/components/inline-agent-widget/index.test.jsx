@@ -52,4 +52,53 @@ describe('InlineAgentWidget', () => {
         expect(screen.getByRole('button', {name: 'A?'})).toBeInTheDocument()
         expect(screen.getByRole('button', {name: 'B?'})).toBeInTheDocument()
     })
+
+    test('?mode=agent-redirect in URL overrides inline config for the current tab', () => {
+        const originalSearch = window.location.search
+        window.history.replaceState({}, '', '/product/500400?mode=agent-redirect')
+        try {
+            renderWithProviders(
+                <InlineAgentWidget config={{...BASE_CONFIG, mode: 'inline'}} />
+            )
+            expect(screen.getByTestId('inline-agent-redirect-shim')).toBeInTheDocument()
+        } finally {
+            window.history.replaceState({}, '', `/${originalSearch}`)
+        }
+    })
+
+    test('?mode=inline in URL overrides agent-redirect config for the current tab', () => {
+        const originalSearch = window.location.search
+        window.history.replaceState({}, '', '/product/500400?mode=inline')
+        try {
+            renderWithProviders(
+                <InlineAgentWidget config={{...BASE_CONFIG, mode: 'agent-redirect'}} />
+            )
+            expect(screen.queryByTestId('inline-agent-redirect-shim')).not.toBeInTheDocument()
+        } finally {
+            window.history.replaceState({}, '', `/${originalSearch}`)
+        }
+    })
+
+    test('?mode=bogus is ignored and config.mode wins', () => {
+        const originalSearch = window.location.search
+        window.history.replaceState({}, '', '/product/500400?mode=bogus')
+        try {
+            renderWithProviders(
+                <InlineAgentWidget config={{...BASE_CONFIG, mode: 'agent-redirect'}} />
+            )
+            expect(screen.getByTestId('inline-agent-redirect-shim')).toBeInTheDocument()
+        } finally {
+            window.history.replaceState({}, '', `/${originalSearch}`)
+        }
+    })
+
+    test('warns in the console when config.mode is an unknown value', () => {
+        const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+        try {
+            renderWithProviders(<InlineAgentWidget config={{...BASE_CONFIG, mode: 'nope'}} />)
+            expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('unknown mode "nope"'))
+        } finally {
+            warnSpy.mockRestore()
+        }
+    })
 })

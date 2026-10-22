@@ -23,6 +23,18 @@ const detectProvider = () => {
     return 'none'
 }
 
+const primeCimulatePageContext = (productContext) => {
+    const productId = productContext?.productId
+    if (!productId) return
+    const pageContextApi = window.CimulateMessaging?.eventHandlers?.pageContext
+    if (typeof pageContextApi?.set !== 'function') return
+    try {
+        pageContextApi.set({type: 'pdp', id: String(productId)})
+    } catch (err) {
+        console.error('Shopper Agent handoff: pageContext.set threw', err)
+    }
+}
+
 const trySendViaCimulate = (question) => {
     const session = window.CimulateMessaging?.eventHandlers?.session
     const sendCandidates = ['sendMessage', 'sendUserMessage', 'sendUserText']
@@ -87,6 +99,7 @@ export const handoffToShopperAgent = ({question, productContext = {}} = {}) => {
 
     let seeded = false
     if (provider === 'commerce-client') {
+        primeCimulatePageContext(productContext)
         seeded = trySendViaCimulate(trimmed)
     }
 
