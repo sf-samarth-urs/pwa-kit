@@ -664,6 +664,42 @@
   "colorRefinements.label.hitCount": {
     "defaultMessage": "{colorLabel} ({colorHitCount})"
   },
+  "compare.action.choose": {
+    "defaultMessage": "Choose {name}"
+  },
+  "compare.action.details": {
+    "defaultMessage": "View full details →"
+  },
+  "compare.advice.heading": {
+    "defaultMessage": "✦ Find your best fit"
+  },
+  "compare.breadcrumb": {
+    "defaultMessage": "Breadcrumb"
+  },
+  "compare.demo.action": {
+    "defaultMessage": "Explore a sample comparison"
+  },
+  "compare.empty.heading": {
+    "defaultMessage": "Find your perfect fit"
+  },
+  "compare.eyebrow": {
+    "defaultMessage": "✦ AI PRODUCT COMPARISON"
+  },
+  "compare.home": {
+    "defaultMessage": "Home"
+  },
+  "compare.specifications": {
+    "defaultMessage": "Specifications"
+  },
+  "compare.table.caption": {
+    "defaultMessage": "Product specifications comparison"
+  },
+  "compare.title": {
+    "defaultMessage": "Compare"
+  },
+  "compare.value.unavailable": {
+    "defaultMessage": "Not specified"
+  },
   "confirmation_modal.default.action.no": {
     "defaultMessage": "No"
   },
@@ -2781,5 +2817,14 @@
   },
   "with_registration.info.please_sign_in": {
     "defaultMessage": "Please sign in to continue!"
+  },
+  "compare.details_unavailable": {
+    "defaultMessage": "Detailed specifications were not returned. Showing the products and summary supplied by the assistant."
+  },
+  "compare.streaming": {
+    "defaultMessage": "Building your comparison…"
+  },
+  "compare.stream_failed": {
+    "defaultMessage": "The comparison could not be completed. Check the assistant’s reply or try again."
   }
 }

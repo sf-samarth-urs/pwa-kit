@@ -82,6 +82,10 @@ jest.mock('@salesforce/retail-react-app/app/hooks/use-commerce-client-messaging'
     default: jest.fn()
 }))
 
+jest.mock('@salesforce/retail-react-app/app/hooks/use-comparison-handoff', () => ({
+    useComparisonHandoff: () => ({onAgentResponse: jest.fn(), onSessionUpdate: jest.fn()})
+}))
+
 // Mock the Commerce Client FAB (internals covered by commerce-client-fab.test.js).
 jest.mock('@salesforce/retail-react-app/app/components/shopper-agent/commerce-client-fab', () => ({
     __esModule: true,

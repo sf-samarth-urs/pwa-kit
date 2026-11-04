@@ -174,20 +174,19 @@ module.exports = {
                 callbackURI: '/registration-verification-callback'
             }
         },
-        defaultSite: 'RefArchGlobal',
+        defaultSite: 'NTOManaged',
         siteAliases: {
-            RefArch: 'us',
-            RefArchGlobal: 'global'
+            NTOManaged: 'us'
         },
         sites,
         commerceAPI: {
             proxyPath: `/mobify/proxy/api`,
             parameters: {
-                clientId: 'c9c45bfd-0ed3-4aa2-9971-40f88962b836',
+                clientId: 'af919544-30a2-4c65-9564-2db56fc80fc3',
                 notifyClientId: 'cdaa0bde-f866-4bf9-941a-e0fe5076db42',
-                organizationId: 'f_ecom_zzrf_001',
-                shortCode: 'kv7kzm78',
-                siteId: 'RefArchGlobal'
+                organizationId: 'f_ecom_tbdp_prd',
+                shortCode: 'sandbox-001',
+                siteId: 'NTOManaged'
             }
             // Optional: Set the domain for auth cookies to share them across subdomains.
             // If not set, cookies default to the current host.
@@ -286,7 +285,7 @@ module.exports = {
         enableHttpOnlySessionCookies: false,
         proxyConfigs: [
             {
-                host: 'kv7kzm78.api.commercecloud.salesforce.com',
+                host: 'sandbox-001.api.commercecloud.salesforce.com',
                 path: 'api'
             },
             {

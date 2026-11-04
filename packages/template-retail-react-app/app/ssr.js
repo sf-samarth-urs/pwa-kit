@@ -166,7 +166,7 @@ const options = {
     mobify: config,
 
     // The port that the local dev server listens on
-    port: 3000,
+    port: Number(process.env.PORT) || 3000,
 
     // The protocol on which the development Express app listens.
     // Set DEV_SERVER_PROTOCOL to 'https' for HTTPS; defaults to 'http' when unset.
@@ -183,7 +183,7 @@ const options = {
     // Set this to false if using a SLAS public client
     // When setting this to true, make sure to also set the PWA_KIT_SLAS_CLIENT_SECRET
     // environment variable as this endpoint will return HTTP 501 if it is not set
-    useSLASPrivateClient: false,
+    useSLASPrivateClient: true,
 
     // To extend the SLAS private-client proxy allow-list, supply
     // `slasPrivateClientAllowList`. See the built-in list in pwa-kit-runtime
@@ -612,6 +612,7 @@ const {handler} = runtime.createHandler(options, (app) => {
                         // Commerce Client messaging widget images
                         'cimulate.ai',
                         '*.cimulate.ai',
+                        's3.amazonaws.com',
                         // Commerce Client image upload (cc_enableImageUpload): the widget
                         // renders images locally only — never from an external host. The
                         // pre-send preview uses a blob: URL (URL.createObjectURL) and the
