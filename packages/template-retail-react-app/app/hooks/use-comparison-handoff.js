@@ -38,5 +38,5 @@ export const useComparisonHandoff = (config) => {
         },
         [enabled, scope]
     )
-    return {onAgentResponse, onSessionUpdate}
+    return {onAgentResponse, onAgentResponseProgress: onAgentResponse, onSessionUpdate}
 }

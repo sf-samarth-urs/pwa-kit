@@ -17,6 +17,7 @@ import {
     Grid,
     Heading,
     Image,
+    Skeleton,
     Text
 } from '@salesforce/retail-react-app/app/components/shared/ui'
 import Link from '@salesforce/retail-react-app/app/components/link'
@@ -176,7 +177,7 @@ export const ComparisonView = ({comparison}) => {
                     </Text>
                 </Box>
             )}
-            {comparison.detailsUnavailable && (
+            {comparison.detailsUnavailable && !comparison.isStreaming && (
                 <Text role="status" mb={8} color="gray.600">
                     {intl.formatMessage({
                         id: 'compare.details_unavailable',
@@ -342,7 +343,43 @@ const ComparePage = () => {
                         {intl.formatMessage({id: 'compare.title', defaultMessage: 'Compare'})}
                     </Text>
                 </Flex>
-                {comparison ? (
+                {comparison?.isStreaming && (
+                    <Text role="status" mb={4} color="gray.600">
+                        {intl.formatMessage({
+                            id: 'compare.streaming',
+                            defaultMessage: 'Building your comparison…'
+                        })}
+                    </Text>
+                )}
+                {comparison?.streamFailed && (
+                    <Text role="status" mb={4} color="gray.600">
+                        {intl.formatMessage({
+                            id: 'compare.stream_failed',
+                            defaultMessage:
+                                'The comparison could not be completed. Check the assistant’s reply or try again.'
+                        })}
+                    </Text>
+                )}
+                {comparison && comparison.products.length < 2 ? (
+                    <Box aria-busy={comparison.isStreaming}>
+                        <Heading as="h1" mb={6}>
+                            {intl.formatMessage({id: 'compare.title', defaultMessage: 'Compare'})}
+                        </Heading>
+                        <Text mb={6} whiteSpace="pre-line">
+                            {renderEmphasis(comparison.introduction || '')}
+                        </Text>
+                        {comparison.isStreaming && (
+                            <Grid
+                                templateColumns="repeat(2, minmax(0, 1fr))"
+                                gap={6}
+                                aria-hidden="true"
+                            >
+                                <Skeleton height="320px" borderRadius="24px" />
+                                <Skeleton height="320px" borderRadius="24px" />
+                            </Grid>
+                        )}
+                    </Box>
+                ) : comparison ? (
                     <ComparisonView comparison={comparison} />
                 ) : (
                     <Box py={16} textAlign="center">

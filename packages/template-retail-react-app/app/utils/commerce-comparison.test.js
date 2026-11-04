@@ -103,3 +103,62 @@ test('scopes snapshots by agent deployment and storefront site', () => {
     const config = {salesforceOrgId: 'org', cc_esDeveloperName: 'agent'}
     expect(comparisonScope(config, 'NTO')).not.toBe(comparisonScope(config, 'RefArch'))
 })
+
+test('streams provisional prose and products without persisting partial results, then accepts the final reply', () => {
+    const progress = {
+        ...response('stream'),
+        isStreaming: true,
+        requestText: 'Compare these watches',
+        content: JSON.stringify({
+            response: [{type: 'markdown', index: 0, data: {content: 'Starting the comparison'}}]
+        })
+    }
+    expect(receiveComparison(scope, progress)).toBe(true)
+    expect(readComparison(scope)).toMatchObject({
+        isStreaming: true,
+        products: [],
+        introduction: 'Starting the comparison'
+    })
+    expect(sessionStorage.getItem(`commerce-comparison:${scope}`)).toBeNull()
+    expect(receiveComparison(scope, {...progress, content: JSON.stringify(fixture)})).toBe(false)
+    expect(readComparison(scope).products).toHaveLength(2)
+    expect(readComparison(scope).isStreaming).toBe(true)
+    expect(receiveComparison(scope, response('stream'))).toBe(true)
+    expect(readComparison(scope).isStreaming).toBe(false)
+    expect(sessionStorage.getItem(`commerce-comparison:${scope}`)).toBeTruthy()
+    expect(receiveComparison(scope, progress)).toBe(false)
+})
+
+test('does not start a comparison stream for ordinary searches and finishes a failed final reply', () => {
+    const progress = {
+        ...response('stream-error'),
+        isStreaming: true,
+        requestText: 'Show me watches',
+        content: JSON.stringify({response: []})
+    }
+    expect(receiveComparison(scope, progress)).toBe(false)
+    expect(receiveComparison(scope, {...progress, requestText: 'Compare these watches'})).toBe(true)
+    receiveComparison(scope, {
+        ...response('stream-error'),
+        content: 'Sorry, details are unavailable'
+    })
+    expect(readComparison(scope)).toMatchObject({isStreaming: false, streamFailed: true})
+})
+
+test('bounds an interrupted stream and clears its timer when the session resets', () => {
+    jest.useFakeTimers()
+    const progress = {
+        ...response('timeout'),
+        isStreaming: true,
+        requestText: 'Compare these watches',
+        content: JSON.stringify({response: []})
+    }
+    receiveComparison(scope, progress)
+    jest.advanceTimersByTime(60000)
+    expect(readComparison(scope)).toMatchObject({isStreaming: false, streamFailed: true})
+    receiveComparison(scope, {...progress, messageId: 'reset'})
+    reconcileComparisonSession(scope, {reason: 'reset'})
+    jest.advanceTimersByTime(60000)
+    expect(readComparison(scope)).toBeNull()
+    jest.useRealTimers()
+})

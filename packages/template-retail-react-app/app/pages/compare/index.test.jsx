@@ -112,3 +112,32 @@ test('shows a limited comparison explicitly when specifications were not returne
         'TrailFit Charge 2 vs TrailFit Blaze'
     )
 })
+
+test('shows streamed prose and skeletons before products arrive', () => {
+    const scope = comparisonScope(getCommerceAgentConfig(), 'NTO')
+    reconcileComparisonSession(scope, {reason: 'reset'})
+    renderPage(<ComparePage />)
+    act(() =>
+        receiveComparison(scope, {
+            conversationId: 'stream-view',
+            messageId: 'stream-view',
+            requestText: 'Compare these watches',
+            isStreaming: true,
+            content: JSON.stringify({
+                response: [{type: 'markdown', data: {content: 'Comparing the watches now'}}]
+            })
+        })
+    )
+    expect(screen.getByRole('status')).toHaveTextContent('Building your comparison')
+    expect(screen.getByText('Comparing the watches now')).toBeInTheDocument()
+    act(() =>
+        receiveComparison(scope, {
+            conversationId: 'stream-view',
+            messageId: 'stream-view',
+            content: JSON.stringify(fixture)
+        })
+    )
+    expect(screen.queryByText('Building your comparison…')).not.toBeInTheDocument()
+    expect(screen.getByRole('table')).toBeInTheDocument()
+    act(() => reconcileComparisonSession(scope, {reason: 'reset'}))
+})

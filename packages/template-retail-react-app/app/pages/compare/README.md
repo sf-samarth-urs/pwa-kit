@@ -25,7 +25,12 @@ callback delivers completed agent replies to PWA. A valid `product_comparison`
 block updates the page and navigates desktop shoppers to `/compare`, preserving
 an open widget. There is no second agent request or conversation. Follow-up
 comparisons replace the current result; ordinary replies leave it unchanged.
-This delivers completed structured replies, rather than partial JSON tokens.
+The opt-in SDK progress callback also supplies accumulated parsed blocks from the
+same stream as chat. Desktop opens a loading comparison view on the first
+comparison content, then fills in prose, products and specification rows. The
+completed reply replaces the provisional view. Raw partial JSON is never rendered.
+Unfinished streams show a failure notice after sixty seconds without an update;
+partial snapshots are not persisted across reloads.
 
 The display model is kept in tab session storage for up to four hours, scoped by
 org, deployment and site. Session reset/end or a different conversation clears it.

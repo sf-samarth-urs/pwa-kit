@@ -713,7 +713,9 @@ const CommerceClientAgentWindow = ({
     } = commerceAgentConfiguration
 
     const navigate = useNavigation()
-    const {onAgentResponse, onSessionUpdate} = useComparisonHandoff(commerceAgentConfiguration)
+    const {onAgentResponse, onAgentResponseProgress, onSessionUpdate} = useComparisonHandoff(
+        commerceAgentConfiguration
+    )
     const onNavigate = useMemo(
         () => (url, event) => {
             const path = toStorefrontNavigatePath(url)
@@ -1188,6 +1190,7 @@ const CommerceClientAgentWindow = ({
             promptsConfig: cc_promptsConfig,
             enablePageContext: toOptionalWidgetBoolean(cc_enablePageContext),
             onAgentResponse,
+            onAgentResponseProgress,
             onSessionUpdate
         }),
         [
@@ -1228,6 +1231,7 @@ const CommerceClientAgentWindow = ({
             cc_promptsConfig,
             cc_enablePageContext,
             onAgentResponse,
+            onAgentResponseProgress,
             onSessionUpdate
         ]
     )
