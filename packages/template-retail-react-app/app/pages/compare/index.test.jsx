@@ -95,3 +95,20 @@ test('live responses replace the empty page and later comparisons update in plac
     act(() => reconcileComparisonSession(scope, {reason: 'ended'}))
     expect(screen.getByRole('heading', {name: 'Find your perfect fit'})).toBeInTheDocument()
 })
+
+test('shows a limited comparison explicitly when specifications were not returned', () => {
+    const payload = JSON.parse(JSON.stringify(fixture))
+    const block = payload.response.find(({type}) => type === 'product_comparison')
+    block.type = 'product_carousel'
+    delete block.data.table
+    renderPage(
+        <ComparisonView comparison={adaptComparisonResponse(payload, 'Compare these jackets')} />
+    )
+    expect(screen.getByRole('status')).toHaveTextContent(
+        'Detailed specifications were not returned'
+    )
+    expect(screen.queryByRole('table')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', {level: 1})).toHaveTextContent(
+        'TrailFit Charge 2 vs TrailFit Blaze'
+    )
+})

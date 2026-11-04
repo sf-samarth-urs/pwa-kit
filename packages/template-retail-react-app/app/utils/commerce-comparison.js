@@ -64,7 +64,7 @@ export const receiveComparison = (scope, response) => {
         return false
     let comparison
     try {
-        comparison = adaptComparisonResponse(JSON.parse(response.content))
+        comparison = adaptComparisonResponse(JSON.parse(response.content), response.requestText)
     } catch {
         return false
     }

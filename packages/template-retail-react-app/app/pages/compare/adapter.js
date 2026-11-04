@@ -16,11 +16,38 @@ export const safeWebUrl = (value, base) => {
     }
 }
 
-export const adaptComparisonResponse = (payload) => {
+export const adaptComparisonResponse = (payload, requestText) => {
     const blocks = payload?.response
     if (!Array.isArray(blocks)) return null
-    const comparisonIndex = blocks.findIndex((block) => block.type === 'product_comparison')
-    const comparison = blocks[comparisonIndex]?.data
+    let comparisonIndex = blocks.findIndex((block) => block?.type === 'product_comparison')
+    const detailsUnavailable = comparisonIndex < 0
+    let comparison = blocks[comparisonIndex]?.data
+    if (detailsUnavailable) {
+        if (
+            typeof requestText !== 'string' ||
+            !/\b(compare|comparison|versus|vs)\b/i.test(requestText)
+        )
+            return null
+        const products = []
+        const seen = new Set()
+        blocks.forEach((block, index) => {
+            let candidates = []
+            if (block?.type === 'product_carousel' && Array.isArray(block.data?.products))
+                candidates = block.data.products
+            else if (block?.type === 'product_tile') {
+                const tile = block.data
+                candidates = [tile?.data ? {...tile.data, id: tile.id || tile.data.id} : tile]
+            }
+            candidates.forEach((product) => {
+                if (typeof product?.id !== 'string' || !product.id.trim() || seen.has(product.id))
+                    return
+                if (comparisonIndex < 0) comparisonIndex = index
+                seen.add(product.id)
+                products.push(product)
+            })
+        })
+        comparison = {products}
+    }
     if (!Array.isArray(comparison?.products)) return null
     const entries = comparison.products
         .map((product, index) => ({product, index}))
@@ -52,6 +79,7 @@ export const adaptComparisonResponse = (payload) => {
             .join('\n\n')
     return {
         products,
+        detailsUnavailable,
         introduction: markdown(blocks.slice(0, comparisonIndex)),
         advice: markdown(blocks.slice(comparisonIndex + 1)),
         rows: (Array.isArray(comparison.table) ? comparison.table : [])

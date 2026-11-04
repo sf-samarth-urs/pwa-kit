@@ -176,6 +176,15 @@ export const ComparisonView = ({comparison}) => {
                     </Text>
                 </Box>
             )}
+            {comparison.detailsUnavailable && (
+                <Text role="status" mb={8} color="gray.600">
+                    {intl.formatMessage({
+                        id: 'compare.details_unavailable',
+                        defaultMessage:
+                            'Detailed specifications were not returned. Showing the products and summary supplied by the assistant.'
+                    })}
+                </Text>
+            )}
             {rows.length > 0 && (
                 <Box
                     overflowX="auto"
