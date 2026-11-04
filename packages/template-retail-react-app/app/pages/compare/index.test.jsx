@@ -5,7 +5,7 @@
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 import React from 'react'
-import {render, screen, within} from '@testing-library/react'
+import {render, screen, within, fireEvent} from '@testing-library/react'
 import {IntlProvider} from 'react-intl'
 import {MemoryRouter} from 'react-router-dom'
 import {ChakraProvider} from '@chakra-ui/react'
@@ -140,4 +140,30 @@ test('shows streamed prose and skeletons before products arrive', () => {
     expect(screen.queryByText('Building your comparison…')).not.toBeInTheDocument()
     expect(screen.getByRole('table')).toBeInTheDocument()
     act(() => reconcileComparisonSession(scope, {reason: 'reset'}))
+})
+
+test('retries an image when a later stream snapshot supplies a different URL for the same product', () => {
+    const model = adaptComparisonResponse(fixture)
+    const {rerender} = renderPage(<ComparisonView comparison={model} />)
+    fireEvent.error(screen.getByRole('img', {name: 'TrailFit Charge 2'}))
+    expect(screen.queryByRole('img', {name: 'TrailFit Charge 2'})).not.toBeInTheDocument()
+    const updated = {
+        ...model,
+        products: model.products.map((product, index) =>
+            index === 0 ? {...product, image: 'https://images.example/recovered.jpg'} : product
+        )
+    }
+    rerender(
+        <MemoryRouter>
+            <IntlProvider locale="en-US">
+                <ChakraProvider>
+                    <ComparisonView comparison={updated} />
+                </ChakraProvider>
+            </IntlProvider>
+        </MemoryRouter>
+    )
+    expect(screen.getByRole('img', {name: 'TrailFit Charge 2'})).toHaveAttribute(
+        'src',
+        'https://images.example/recovered.jpg'
+    )
 })

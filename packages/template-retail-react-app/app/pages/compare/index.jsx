@@ -46,17 +46,17 @@ const renderEmphasis = (content) =>
     })
 
 const ProductImage = ({src, name}) => {
-    const [failed, setFailed] = useState(false)
+    const [failedSrc, setFailedSrc] = useState(null)
     return (
         <Flex aspectRatio={1} bg="#f5f4f0" align="center" justify="center" overflow="hidden">
-            {src && !failed ? (
+            {src && failedSrc !== src ? (
                 <Image
                     src={src}
                     alt={name}
                     width="100%"
                     height="100%"
                     objectFit="contain"
-                    onError={() => setFailed(true)}
+                    onError={() => setFailedSrc(src)}
                 />
             ) : (
                 <Text color="gray.600" px={6} textAlign="center">

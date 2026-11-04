@@ -117,3 +117,59 @@ test('retains the names and prices nested in product-tile data', () => {
     expect(model.products[0].price).toBe(134.96)
     expect(model.products[0].image).toMatch(/^https:/)
 })
+
+test('maps the SDK carousel contract including nested names, images and expanded prices', () => {
+    const payload = {
+        response: [
+            {
+                type: 'product_carousel',
+                data: {
+                    products: [
+                        {
+                            id: '4070962BB3',
+                            data: {
+                                name: 'Mountain 25 Tent',
+                                description: 'Mountain tent',
+                                imageUrl: 'https://images.example/mountain.jpg',
+                                price: 689.95,
+                                currencyCode: 'USD'
+                            }
+                        },
+                        {
+                            id: '4070960BB3',
+                            data: {
+                                name: 'Bastion 4 Tent',
+                                imageUrl: 'https://images.example/bastion.jpg',
+                                price: 949.95,
+                                discountPrice: 899,
+                                currencyCode: 'EUR'
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+    const model = adaptComparisonResponse(
+        payload,
+        'Could you compare the 2nd and 4th tents from your results'
+    )
+    expect(model.products[0]).toMatchObject({
+        id: '4070962BB3',
+        name: 'Mountain 25 Tent',
+        description: 'Mountain tent',
+        image: 'https://images.example/mountain.jpg',
+        price: 689.95,
+        currency: 'USD'
+    })
+    expect(model.products[1]).toMatchObject({
+        id: '4070960BB3',
+        name: 'Bastion 4 Tent',
+        image: 'https://images.example/bastion.jpg',
+        price: 899,
+        currency: 'EUR'
+    })
+    expect(model.detailsUnavailable).toBe(true)
+    expect(model.rows).toEqual([])
+    expect(adaptComparisonResponse(payload, 'Show me tents')).toBeNull()
+})

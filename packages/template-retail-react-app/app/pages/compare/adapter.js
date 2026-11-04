@@ -16,6 +16,11 @@ export const safeWebUrl = (value, base) => {
     }
 }
 
+const unwrapProduct = (product) =>
+    product?.data && typeof product.data === 'object' && !Array.isArray(product.data)
+        ? {...product.data, id: product.id || product.data.id}
+        : product
+
 export const adaptComparisonResponse = (payload, requestText) => {
     const blocks = payload?.response
     if (!Array.isArray(blocks)) return null
@@ -35,10 +40,10 @@ export const adaptComparisonResponse = (payload, requestText) => {
             if (block?.type === 'product_carousel' && Array.isArray(block.data?.products))
                 candidates = block.data.products
             else if (block?.type === 'product_tile') {
-                const tile = block.data
-                candidates = [tile?.data ? {...tile.data, id: tile.id || tile.data.id} : tile]
+                candidates = [block.data]
             }
-            candidates.forEach((product) => {
+            candidates.forEach((candidate) => {
+                const product = unwrapProduct(candidate)
                 if (typeof product?.id !== 'string' || !product.id.trim() || seen.has(product.id))
                     return
                 if (comparisonIndex < 0) comparisonIndex = index
@@ -50,7 +55,7 @@ export const adaptComparisonResponse = (payload, requestText) => {
     }
     if (!Array.isArray(comparison?.products)) return null
     const entries = comparison.products
-        .map((product, index) => ({product, index}))
+        .map((product, index) => ({product: unwrapProduct(product), index}))
         .filter(({product}) => product && typeof product.id === 'string' && product.id.trim())
     if (
         entries.length < 2 ||
@@ -59,17 +64,17 @@ export const adaptComparisonResponse = (payload, requestText) => {
         return null
     }
     const products = entries.map(({product}) => {
-        const base = safeWebUrl(product.baseUrl)
+        const base = safeWebUrl(product.baseUrl) || safeWebUrl(product.productPageUrl)
         const fallbackImage = product.imgGroups?.find((group) => group.viewType === 'large')
             ?.imgs?.[0]?.url
         return {
             id: product.id,
             name: product.name || product.id,
-            description: product.dscr || '',
+            description: product.dscr || product.description || '',
             category: product.primaryCategoryId?.replace(/[-_]/g, ' ') || '',
             image: safeWebUrl(product.imageUrl, base) || safeWebUrl(fallbackImage, base),
-            price: Number.isFinite(product.pr?.cur) ? product.pr.cur : undefined,
-            currency: product.ccy || 'USD'
+            price: [product.discountPrice, product.pr?.cur, product.price].find(Number.isFinite),
+            currency: product.ccy || product.currencyCode || 'USD'
         }
     })
     const markdown = (slice) =>
