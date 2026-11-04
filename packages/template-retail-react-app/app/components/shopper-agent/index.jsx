@@ -19,6 +19,7 @@ import {
 import PropTypes from 'prop-types'
 import {useTheme} from '@salesforce/retail-react-app/app/components/shared/ui'
 import useMiaw, {normalizeLocaleToSalesforce} from '@salesforce/retail-react-app/app/hooks/use-miaw'
+import {useComparisonHandoff} from '@salesforce/retail-react-app/app/hooks/use-comparison-handoff'
 import useCommerceClientMessaging from '@salesforce/retail-react-app/app/hooks/use-commerce-client-messaging'
 import useNavigation from '@salesforce/retail-react-app/app/hooks/use-navigation'
 import {
@@ -712,6 +713,7 @@ const CommerceClientAgentWindow = ({
     } = commerceAgentConfiguration
 
     const navigate = useNavigation()
+    const {onAgentResponse, onSessionUpdate} = useComparisonHandoff(commerceAgentConfiguration)
     const onNavigate = useMemo(
         () => (url, event) => {
             const path = toStorefrontNavigatePath(url)
@@ -1184,7 +1186,9 @@ const CommerceClientAgentWindow = ({
             showProductDescription: toOptionalWidgetBoolean(cc_showProductDescription),
             showProductCaptions: toOptionalWidgetBoolean(cc_showProductCaptions),
             promptsConfig: cc_promptsConfig,
-            enablePageContext: toOptionalWidgetBoolean(cc_enablePageContext)
+            enablePageContext: toOptionalWidgetBoolean(cc_enablePageContext),
+            onAgentResponse,
+            onSessionUpdate
         }),
         [
             commerceClientElementId,
@@ -1222,7 +1226,9 @@ const CommerceClientAgentWindow = ({
             cc_showProductDescription,
             cc_showProductCaptions,
             cc_promptsConfig,
-            cc_enablePageContext
+            cc_enablePageContext,
+            onAgentResponse,
+            onSessionUpdate
         ]
     )
 

@@ -516,3 +516,18 @@ describe('useCommerceClientMessaging', () => {
         expect(mockInject).toHaveBeenCalledTimes(1)
     })
 })
+
+test('forwards response and session callbacks without creating a second client', () => {
+    const inject = jest.fn()
+    window.CimulateMessaging = {injectMessagingWidget: inject}
+    const onAgentResponse = jest.fn()
+    const onSessionUpdate = jest.fn()
+    injectCommerceClientWidget({...messagingFields, onAgentResponse, onSessionUpdate})
+    expect(inject).toHaveBeenCalledWith(
+        expect.objectContaining({
+            messagingConfig: expect.objectContaining({onAgentResponse, onSessionUpdate})
+        })
+    )
+    expect(inject).toHaveBeenCalledTimes(1)
+    delete window.CimulateMessaging
+})

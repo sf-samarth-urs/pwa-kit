@@ -1,8 +1,8 @@
 # Storefront comparison page
 
 Preview the supplied TrailFit agent response at `/us/en-US/compare?demo=trailfit`.
-The plain `/us/en-US/compare` route displays an empty state. Demo data is never
-substituted silently for a live result.
+The plain `/us/en-US/compare` route displays the latest live comparison, or an
+empty state until the agent returns one. Demo data is never substituted for a live result.
 
 From `packages/template-retail-react-app`:
 
@@ -20,9 +20,28 @@ The page retains the storefront header, uses local PDP routes, and scrolls wide
 cards and specifications on narrow screens. It does not infer ratings, inventory
 or a recommended product from prose. The advice panel displays the supplied advice.
 
-Live messaging result delivery, automatic navigation, comparison persistence and
-conversation-bound follow-up actions are the next integration step. The page does
-not create, end or alter a messaging conversation.
+With `cc_enableComparisonPage` enabled, the messaging SDK's `onAgentResponse`
+callback delivers completed agent replies to PWA. A valid `product_comparison`
+block updates the page and navigates desktop shoppers to `/compare`, preserving
+an open widget. There is no second agent request or conversation. Follow-up
+comparisons replace the current result; ordinary replies leave it unchanged.
+This delivers completed structured replies, rather than partial JSON tokens.
+
+The display model is kept in tab session storage for up to four hours, scoped by
+org, deployment and site. Session reset/end or a different conversation clears it.
+Message IDs prevent replayed replies from reopening the page.
+
+The local example requires the unpublished SDK changes on Cimulate branch
+`codex/comparison-response-handoff`. From its `javascript/copilot-widget` directory:
+
+```sh
+WIDGET_LIB_FORMAT=umd VITE_WIDGET_LIB_FORMAT=umd npm exec vite build -- --mode production --config vite.messaging.config.ts
+cp dist/messaging.umd.js /path/to/pwa-kit-compare/packages/template-retail-react-app/app/static/comparison-messaging.umd.js
+```
+
+The generated bundle is ignored by Git. The example loads it through
+`commerceClientScriptSourceUrl`; replace this override with a published SDK version
+when the callback is released. The page does not create or end conversations.
 
 This worktree reuses dependency directories from the original checkout through
 local symlinks. Run the normal repository dependency setup in a fresh clone.

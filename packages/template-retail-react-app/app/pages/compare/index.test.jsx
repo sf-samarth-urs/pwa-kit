@@ -11,11 +11,18 @@ import {MemoryRouter} from 'react-router-dom'
 import {ChakraProvider} from '@chakra-ui/react'
 import ComparePage, {ComparisonView} from '@salesforce/retail-react-app/app/pages/compare'
 import {adaptComparisonResponse} from '@salesforce/retail-react-app/app/pages/compare/adapter'
+import {act} from '@testing-library/react'
+import {
+    receiveComparison,
+    reconcileComparisonSession,
+    comparisonScope
+} from '@salesforce/retail-react-app/app/utils/commerce-comparison'
+import {getCommerceAgentConfig} from '@salesforce/retail-react-app/app/utils/config-utils'
 import fixture from '@salesforce/retail-react-app/app/pages/compare/trailfit-response.json'
 
 jest.mock('@salesforce/retail-react-app/app/hooks/use-multi-site', () => ({
     __esModule: true,
-    default: () => ({buildUrl: (path) => `/us/en-US${path}`})
+    default: () => ({site: {id: 'NTO'}, buildUrl: (path) => `/us/en-US${path}`})
 }))
 
 const renderPage = (element, path = '/compare') =>
@@ -60,4 +67,31 @@ test('renders a third product and labels missing cells as unspecified', () => {
     expect(within(table).getAllByRole('columnheader')).toHaveLength(4)
     expect(within(table).getByRole('columnheader', {name: 'Third Watch'})).toBeInTheDocument()
     expect(within(table).getAllByText('Not specified')).not.toHaveLength(0)
+})
+
+test('live responses replace the empty page and later comparisons update in place', () => {
+    const scope = comparisonScope(getCommerceAgentConfig(), 'NTO')
+    reconcileComparisonSession(scope, {reason: 'reset'})
+    renderPage(<ComparePage />)
+    const payload = JSON.parse(JSON.stringify(fixture))
+    payload.response[1].data.products[1].name = 'Live Watch'
+    act(() =>
+        receiveComparison(scope, {
+            conversationId: 'live-test',
+            messageId: 'live-1',
+            content: JSON.stringify(payload)
+        })
+    )
+    expect(screen.getByRole('heading', {level: 1})).toHaveTextContent('Live Watch')
+    payload.response[1].data.products[1].name = 'Updated Watch'
+    act(() =>
+        receiveComparison(scope, {
+            conversationId: 'live-test',
+            messageId: 'live-2',
+            content: JSON.stringify(payload)
+        })
+    )
+    expect(screen.getByRole('heading', {level: 1})).toHaveTextContent('Updated Watch')
+    act(() => reconcileComparisonSession(scope, {reason: 'ended'}))
+    expect(screen.getByRole('heading', {name: 'Find your perfect fit'})).toBeInTheDocument()
 })

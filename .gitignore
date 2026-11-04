@@ -25,3 +25,4 @@ e2e/mrt-target/
 # We generally ignore all dist directories, but allow the action’s dist so the action can execute.
 # We need this specifically to engage post run hook for the e2e_release_mrt_target action to release the MRT target back to the pool.
 !.github/actions/**/dist/
+packages/template-retail-react-app/app/static/comparison-messaging.umd.js

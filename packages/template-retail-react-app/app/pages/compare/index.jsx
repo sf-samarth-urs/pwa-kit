@@ -5,7 +5,7 @@
  * For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
  */
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import PropTypes from 'prop-types'
 import {useLocation} from 'react-router-dom'
 import {useIntl} from 'react-intl'
@@ -24,8 +24,25 @@ import Seo from '@salesforce/retail-react-app/app/components/seo'
 import {adaptComparisonResponse} from '@salesforce/retail-react-app/app/pages/compare/adapter'
 import trailfitResponse from '@salesforce/retail-react-app/app/pages/compare/trailfit-response.json'
 
+import {getCommerceAgentConfig} from '@salesforce/retail-react-app/app/utils/config-utils'
+import useMultiSite from '@salesforce/retail-react-app/app/hooks/use-multi-site'
+import {
+    comparisonScope,
+    readComparison,
+    subscribeComparison
+} from '@salesforce/retail-react-app/app/utils/commerce-comparison'
+
 const green = '#1d3b20'
 const border = '#e6e1d9'
+
+const renderEmphasis = (content) =>
+    content.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((part, index) => {
+        if (part.startsWith('**') && part.endsWith('**'))
+            return <strong key={index}>{part.slice(2, -2)}</strong>
+        if (part.startsWith('*') && part.endsWith('*'))
+            return <em key={index}>{part.slice(1, -1)}</em>
+        return part
+    })
 
 const ProductImage = ({src, name}) => {
     const [failed, setFailed] = useState(false)
@@ -88,7 +105,7 @@ export const ComparisonView = ({comparison}) => {
             </Heading>
             {introduction && (
                 <Text color="#667085" fontSize="lg" maxWidth="900px" mb={10}>
-                    {introduction}
+                    {renderEmphasis(introduction)}
                 </Text>
             )}
             <Box overflowX="auto" pb={2} mb={10}>
@@ -155,7 +172,7 @@ export const ComparisonView = ({comparison}) => {
                         })}
                     </Heading>
                     <Text whiteSpace="pre-line" lineHeight="tall" color="#344054">
-                        {advice}
+                        {renderEmphasis(advice)}
                     </Text>
                 </Box>
             )}
@@ -280,7 +297,14 @@ const ComparePage = () => {
     const {search} = useLocation()
     const intl = useIntl()
     const isDemo = new URLSearchParams(search).get('demo') === 'trailfit'
-    const comparison = isDemo ? adaptComparisonResponse(trailfitResponse) : null
+    const {site} = useMultiSite()
+    const scope = comparisonScope(getCommerceAgentConfig(), site?.id)
+    const [liveComparison, setLiveComparison] = useState(null)
+    useEffect(() => {
+        setLiveComparison(readComparison(scope))
+        return subscribeComparison(scope, setLiveComparison)
+    }, [scope])
+    const comparison = isDemo ? adaptComparisonResponse(trailfitResponse) : liveComparison
     return (
         <Box
             data-testid="compare-page"

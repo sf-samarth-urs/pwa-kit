@@ -88,7 +88,9 @@ const injectCommerceClientWidget = ({
     showProductDescription,
     showProductCaptions,
     promptsConfig,
-    enablePageContext
+    enablePageContext,
+    onAgentResponse,
+    onSessionUpdate
 } = {}) => {
     if (!onClient) return false
 
@@ -110,6 +112,8 @@ const injectCommerceClientWidget = ({
             enableDownloadTranscript,
             enableImageUpload
         }
+        if (typeof onAgentResponse === 'function') messagingConfig.onAgentResponse = onAgentResponse
+        if (typeof onSessionUpdate === 'function') messagingConfig.onSessionUpdate = onSessionUpdate
         if (routingAttributes && typeof routingAttributes === 'object') {
             messagingConfig.routingAttributes = routingAttributes
         }
