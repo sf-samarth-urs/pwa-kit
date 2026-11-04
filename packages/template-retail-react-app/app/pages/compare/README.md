@@ -29,4 +29,4 @@ local symlinks. Run the normal repository dependency setup in a fresh clone.
 
 The example enables the NTO sandbox deployment `NTO_SFRA_sdb601_CC_ES` in org
 `00Dfi800001CByP`. PWA maps the agent endpoint and org through `scrt2Url` and
-`salesforceOrgId`. Storefront catalog configuration is independent.
+`salesforceOrgId`. The storefront uses the same NTOManaged site, NTO commerce API and private SLAS client as the original checkout. The private client secret must be supplied through PWA_KIT_SLAS_CLIENT_SECRET in the local .env; it is not committed.

@@ -299,11 +299,16 @@ export const resolveCommerceClientRoutingAttributes = (commerceAgent) => {
  */
 export const validateCommerceClientDomain = (url) => {
     try {
-        const {hostname} = new URL(url)
+        const {hostname} = new URL(
+            url,
+            typeof window !== 'undefined' ? window.location.origin : 'http://localhost'
+        )
         return (
             hostname === 'cimulate.ai' ||
             hostname.endsWith('.cimulate.ai') ||
-            hostname.endsWith('.sfcc-store-internal.net')
+            hostname.endsWith('.sfcc-store-internal.net') ||
+            hostname === 'localhost' ||
+            hostname === '127.0.0.1'
         )
     } catch {
         return false

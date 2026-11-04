@@ -183,7 +183,7 @@ const options = {
     // Set this to false if using a SLAS public client
     // When setting this to true, make sure to also set the PWA_KIT_SLAS_CLIENT_SECRET
     // environment variable as this endpoint will return HTTP 501 if it is not set
-    useSLASPrivateClient: false,
+    useSLASPrivateClient: true,
 
     // To extend the SLAS private-client proxy allow-list, supply
     // `slasPrivateClientAllowList`. See the built-in list in pwa-kit-runtime
@@ -606,13 +606,13 @@ const {handler} = runtime.createHandler(options, (app) => {
                         // Default source for product images - replace with your CDN
                         '*.commercecloud.salesforce.com',
                         '*.demandware.net',
-                        'https://s3.amazonaws.com/northerntrailoutfitters.com/',
                         '*.adyen.com',
                         'pay.google.com', // Google Pay payment handler icon
                         'www.gstatic.com', // optional, if icon is on gstatic
                         // Commerce Client messaging widget images
                         'cimulate.ai',
                         '*.cimulate.ai',
+                        's3.amazonaws.com',
                         // Commerce Client image upload (cc_enableImageUpload): the widget
                         // renders images locally only — never from an external host. The
                         // pre-send preview uses a blob: URL (URL.createObjectURL) and the
@@ -640,8 +640,7 @@ const {handler} = runtime.createHandler(options, (app) => {
                         '*.adyen.com',
                         'pay.google.com',
                         'www.gstatic.com',
-                        '*.demandware.net',
-                        'https://s3.amazonaws.com/northerntrailoutfitters.com/', // Used to load a valid payment scripts in test environment
+                        '*.demandware.net', // Used to load a valid payment scripts in test environment
                         'maps.googleapis.com',
                         'places.googleapis.com'
                     ],
@@ -662,8 +661,7 @@ const {handler} = runtime.createHandler(options, (app) => {
                         // - 'google.com/pay/' and 'www.google.com/pay/' may be required for certain flows (especially with Adyen) or in some browsers
                         //   where the interactive payment sheet makes server calls directly to google.com/pay.
                         // - You may need to adjust these URLs based on your environments.
-                        '*.demandware.net',
-                        'https://s3.amazonaws.com/northerntrailoutfitters.com/', // Used to load a valid payment scripts in test environment
+                        '*.demandware.net', // Used to load a valid payment scripts in test environment
                         '*.adyen.com',
                         '*.paypal.com',
                         'pay.google.com',
@@ -691,7 +689,6 @@ const {handler} = runtime.createHandler(options, (app) => {
                     'frame-ancestors': [
                         // Allow Page Designer to embed the storefront in an iframe
                         '*.demandware.net',
-                        'https://s3.amazonaws.com/northerntrailoutfitters.com/',
                         // Allow same-origin framing, including express-payment routes embedded by
                         // Shopper Agent.
                         "'self'"
