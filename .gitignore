@@ -2,7 +2,7 @@
 *.tgz
 dist/
 package/
-node_modules/
+node_modules
 *.log
 coverage/
 

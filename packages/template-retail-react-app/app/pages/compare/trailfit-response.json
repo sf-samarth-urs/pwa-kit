@@ -1,0 +1,658 @@
+{
+    "response": [
+        {
+            "type": "markdown",
+            "index": 0,
+            "data": {
+                "content": "Here\u2019s a side-by-side comparison of the TrailFit Charge 2 and TrailFit Blaze. Both are fitness watches packed with features, but there are some key differences to help you choose."
+            }
+        },
+        {
+            "type": "product_comparison",
+            "index": 1,
+            "data": {
+                "products": [
+                    {
+                        "vmat": [
+                            {
+                                "vars": {
+                                    "Color": "AEY"
+                                },
+                                "pr": null,
+                                "pid": "500500AEYAD7",
+                                "ord": true
+                            },
+                            {
+                                "vars": {
+                                    "Color": "AT7"
+                                },
+                                "pr": null,
+                                "pid": "500500AT7AD7",
+                                "ord": true
+                            },
+                            {
+                                "vars": {
+                                    "Color": "AHW"
+                                },
+                                "pr": null,
+                                "pid": "500500AHWAD7",
+                                "ord": true
+                            }
+                        ],
+                        "vattr": [
+                            {
+                                "opts": [
+                                    {
+                                        "val": "AEY",
+                                        "ord": true,
+                                        "name": "Black / Silver"
+                                    },
+                                    {
+                                        "val": "AT7",
+                                        "ord": true,
+                                        "name": "Hero Purple / White"
+                                    },
+                                    {
+                                        "val": "AHW",
+                                        "ord": true,
+                                        "name": "Blue Wing Teal / Asphalt Grey"
+                                    }
+                                ],
+                                "lbl": "Color",
+                                "id": "Color"
+                            }
+                        ],
+                        "slugUrl": "https://www.shop.prod.tbdp.sfcc-store-internal.net/en_US/trailfit-charge-2-500500.html",
+                        "quantity": {
+                            "minQuantity": 1.0,
+                            "maxQuantity": null,
+                            "increment": 1.0
+                        },
+                        "promotions": [],
+                        "primaryCategoryId": "activity-trackers",
+                        "pr": {
+                            "prom": null,
+                            "orig": 134.96,
+                            "cur": 134.96
+                        },
+                        "name": "TrailFit Charge 2",
+                        "longDesc": null,
+                        "imgGroups": [
+                            {
+                                "viewType": "large",
+                                "vattr": null,
+                                "imgs": [
+                                    {
+                                        "url": "large/500500.jpg"
+                                    },
+                                    {
+                                        "url": "large/500500-d.jpg"
+                                    },
+                                    {
+                                        "url": "large/500500-c.jpg"
+                                    },
+                                    {
+                                        "url": "large/500500-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "large",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "large/500500-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "large",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "large/500500-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "large",
+                                "vattr": [
+                                    {
+                                        "vals": ["AHW"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "large/500500-d.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": null,
+                                "imgs": [
+                                    {
+                                        "url": "medium/500500.jpg"
+                                    },
+                                    {
+                                        "url": "medium/500500-d.jpg"
+                                    },
+                                    {
+                                        "url": "medium/500500-c.jpg"
+                                    },
+                                    {
+                                        "url": "medium/500500-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "medium/500500-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "medium/500500-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": [
+                                    {
+                                        "vals": ["AHW"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "medium/500500-d.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": null,
+                                "imgs": [
+                                    {
+                                        "url": "small/500500.jpg"
+                                    },
+                                    {
+                                        "url": "small/500500-d.jpg"
+                                    },
+                                    {
+                                        "url": "small/500500-c.jpg"
+                                    },
+                                    {
+                                        "url": "small/500500-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "small/500500-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "small/500500-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": [
+                                    {
+                                        "vals": ["AHW"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "small/500500-d.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "swatch",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "swatch/500500-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "swatch",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "swatch/500500-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "swatch",
+                                "vattr": [
+                                    {
+                                        "vals": ["AHW"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "swatch/500500-d.jpg"
+                                    }
+                                ]
+                            }
+                        ],
+                        "imageUrl": "https://s3.amazonaws.com/northerntrailoutfitters.com/nto-electronics/default/images/large/500500-c.jpg",
+                        "id": "500500",
+                        "extendedData": null,
+                        "dscr": "Make every beat count with a fitness wristband built with PurePulse heart rate, multi-sport modes, guided breathing sessions & interchangeable bands.",
+                        "dfOrd": true,
+                        "customProperties": null,
+                        "ccy": "USD",
+                        "baseUrl": "https://s3.amazonaws.com/northerntrailoutfitters.com/nto-electronics/default/images/"
+                    },
+                    {
+                        "vmat": [
+                            {
+                                "vars": {
+                                    "Color": "AAJ"
+                                },
+                                "pr": null,
+                                "pid": "500600AAJAD7",
+                                "ord": true
+                            },
+                            {
+                                "vars": {
+                                    "Color": "AT7"
+                                },
+                                "pr": null,
+                                "pid": "500600AT7AD7",
+                                "ord": true
+                            },
+                            {
+                                "vars": {
+                                    "Color": "AEY"
+                                },
+                                "pr": null,
+                                "pid": "500600AEYAD7",
+                                "ord": true
+                            }
+                        ],
+                        "vattr": [
+                            {
+                                "opts": [
+                                    {
+                                        "val": "AAJ",
+                                        "ord": true,
+                                        "name": "Air Force Blue / Silver"
+                                    },
+                                    {
+                                        "val": "AT7",
+                                        "ord": true,
+                                        "name": "Hero Purple / White"
+                                    },
+                                    {
+                                        "val": "AEY",
+                                        "ord": true,
+                                        "name": "Black / Silver"
+                                    }
+                                ],
+                                "lbl": "Color",
+                                "id": "Color"
+                            }
+                        ],
+                        "slugUrl": "https://www.shop.prod.tbdp.sfcc-store-internal.net/en_US/trailfit-blaze-500600.html",
+                        "quantity": {
+                            "minQuantity": 1.0,
+                            "maxQuantity": null,
+                            "increment": 1.0
+                        },
+                        "promotions": [],
+                        "primaryCategoryId": "activity-trackers",
+                        "pr": {
+                            "prom": null,
+                            "orig": 179.96,
+                            "cur": 179.96
+                        },
+                        "name": "TrailFit Blaze",
+                        "longDesc": null,
+                        "imgGroups": [
+                            {
+                                "viewType": "large",
+                                "vattr": null,
+                                "imgs": [
+                                    {
+                                        "url": "large/500600.jpg"
+                                    },
+                                    {
+                                        "url": "large/500600-b.jpg"
+                                    },
+                                    {
+                                        "url": "large/500600-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "large",
+                                "vattr": [
+                                    {
+                                        "vals": ["AAJ"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "large/500600-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "large",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "large/500600.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "large",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "large/500600-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": null,
+                                "imgs": [
+                                    {
+                                        "url": "medium/500600.jpg"
+                                    },
+                                    {
+                                        "url": "medium/500600-b.jpg"
+                                    },
+                                    {
+                                        "url": "medium/500600-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": [
+                                    {
+                                        "vals": ["AAJ"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "medium/500600-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "medium/500600.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "medium",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "medium/500600-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": null,
+                                "imgs": [
+                                    {
+                                        "url": "small/500600.jpg"
+                                    },
+                                    {
+                                        "url": "small/500600-b.jpg"
+                                    },
+                                    {
+                                        "url": "small/500600-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": [
+                                    {
+                                        "vals": ["AAJ"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "small/500600-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "small/500600.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "small",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "small/500600-b.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "swatch",
+                                "vattr": [
+                                    {
+                                        "vals": ["AAJ"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "swatch/500600-c.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "swatch",
+                                "vattr": [
+                                    {
+                                        "vals": ["AT7"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "swatch/500600.jpg"
+                                    }
+                                ]
+                            },
+                            {
+                                "viewType": "swatch",
+                                "vattr": [
+                                    {
+                                        "vals": ["AEY"],
+                                        "id": "color"
+                                    }
+                                ],
+                                "imgs": [
+                                    {
+                                        "url": "swatch/500600-b.jpg"
+                                    }
+                                ]
+                            }
+                        ],
+                        "imageUrl": "https://s3.amazonaws.com/northerntrailoutfitters.com/nto-electronics/default/images/large/500600-c.jpg",
+                        "id": "500600",
+                        "extendedData": null,
+                        "dscr": "Get fit in style with a smart fitness watch built with revolutionary features like PurePulse heart rate, Connected GPS, on-screen workouts and more.",
+                        "dfOrd": true,
+                        "customProperties": null,
+                        "ccy": "USD",
+                        "baseUrl": "https://s3.amazonaws.com/northerntrailoutfitters.com/nto-electronics/default/images/"
+                    }
+                ],
+                "table": [
+                    {
+                        "row_name": "Heart Rate Monitoring",
+                        "values": ["PurePulse heart rate", "PurePulse heart rate"]
+                    },
+                    {
+                        "row_name": "GPS",
+                        "values": ["No", "Connected GPS"]
+                    },
+                    {
+                        "row_name": "On-Screen Workouts",
+                        "values": ["No", "Yes"]
+                    },
+                    {
+                        "row_name": "Colors Available",
+                        "values": [
+                            "Black/Silver, Hero Purple/White, Blue Wing Teal/Asphalt Grey",
+                            "Air Force Blue/Silver, Hero Purple/White, Black/Silver"
+                        ]
+                    },
+                    {
+                        "row_name": "Activity Modes",
+                        "values": ["Multi-sport modes", "Multi-sport modes"]
+                    },
+                    {
+                        "row_name": "Interchangeable Bands",
+                        "values": ["Yes", "Not specified"]
+                    },
+                    {
+                        "row_name": "Price",
+                        "values": ["$134.96", "$179.96"]
+                    }
+                ]
+            }
+        },
+        {
+            "type": "markdown",
+            "index": 2,
+            "data": {
+                "content": "If you want GPS and on-screen workouts, the TrailFit Blaze is your best bet. For a more affordable option with core fitness features, go with the TrailFit Charge 2.\n\nDo you have questions about sizing, compatibility, or want to see more color options for either watch?"
+            }
+        },
+        {
+            "type": "suggestions",
+            "index": 3,
+            "data": {
+                "display_text": [
+                    "Show more watches with GPS",
+                    "Are these swim-proof?",
+                    "I want to see the color variants",
+                    "Add TrailFit Blaze to my cart"
+                ]
+            }
+        }
+    ]
+}

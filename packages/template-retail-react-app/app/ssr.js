@@ -166,7 +166,7 @@ const options = {
     mobify: config,
 
     // The port that the local dev server listens on
-    port: 3000,
+    port: Number(process.env.PORT) || 3000,
 
     // The protocol on which the development Express app listens.
     // Set DEV_SERVER_PROTOCOL to 'https' for HTTPS; defaults to 'http' when unset.
@@ -606,6 +606,7 @@ const {handler} = runtime.createHandler(options, (app) => {
                         // Default source for product images - replace with your CDN
                         '*.commercecloud.salesforce.com',
                         '*.demandware.net',
+                        'https://s3.amazonaws.com/northerntrailoutfitters.com/',
                         '*.adyen.com',
                         'pay.google.com', // Google Pay payment handler icon
                         'www.gstatic.com', // optional, if icon is on gstatic
@@ -639,7 +640,8 @@ const {handler} = runtime.createHandler(options, (app) => {
                         '*.adyen.com',
                         'pay.google.com',
                         'www.gstatic.com',
-                        '*.demandware.net', // Used to load a valid payment scripts in test environment
+                        '*.demandware.net',
+                        'https://s3.amazonaws.com/northerntrailoutfitters.com/', // Used to load a valid payment scripts in test environment
                         'maps.googleapis.com',
                         'places.googleapis.com'
                     ],
@@ -660,7 +662,8 @@ const {handler} = runtime.createHandler(options, (app) => {
                         // - 'google.com/pay/' and 'www.google.com/pay/' may be required for certain flows (especially with Adyen) or in some browsers
                         //   where the interactive payment sheet makes server calls directly to google.com/pay.
                         // - You may need to adjust these URLs based on your environments.
-                        '*.demandware.net', // Used to load a valid payment scripts in test environment
+                        '*.demandware.net',
+                        'https://s3.amazonaws.com/northerntrailoutfitters.com/', // Used to load a valid payment scripts in test environment
                         '*.adyen.com',
                         '*.paypal.com',
                         'pay.google.com',
@@ -688,6 +691,7 @@ const {handler} = runtime.createHandler(options, (app) => {
                     'frame-ancestors': [
                         // Allow Page Designer to embed the storefront in an iframe
                         '*.demandware.net',
+                        'https://s3.amazonaws.com/northerntrailoutfitters.com/',
                         // Allow same-origin framing, including express-payment routes embedded by
                         // Shopper Agent.
                         "'self'"
