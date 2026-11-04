@@ -7,6 +7,7 @@ substituted silently for a live result.
 From `packages/template-retail-react-app`:
 
 ```sh
+cp config/compare-agent.env.example .env
 PORT=3012 npm start
 ```
 
@@ -25,3 +26,7 @@ not create, end or alter a messaging conversation.
 
 This worktree reuses dependency directories from the original checkout through
 local symlinks. Run the normal repository dependency setup in a fresh clone.
+
+The example enables the NTO sandbox deployment `NTO_SFRA_sdb601_CC_ES` in org
+`00Dfi800001CByP`. PWA maps the agent endpoint and org through `scrt2Url` and
+`salesforceOrgId`. Storefront catalog configuration is independent.
